@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="ct-chart ct-perfect-fourth"></div>
+    <script>
+        var data = {
+            labels: [],
+            series: [[]]
+        };
+
+        {% for entry in entries_prev %}
+            data.labels.push('{{ entry.time }}')
+            data.series[0].push('{{ entry.value }}')
+        {% endfor %}
+
+        data.series.push([])
+        {% for entry in entries %}
+            data.series[1].push('{{ entry.value }}')
+        {% endfor %}
+
+        new Chartist.Line('.ct-chart', data
+        , {
+            fullWidth: true,
+            chartPadding: {
+                right: 40
+            }
+        });
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,3 @@
+graft ig/templates
+graft ig/static
+include ig/schema.sql
