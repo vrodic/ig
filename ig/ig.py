@@ -1,10 +1,10 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+    render_template, flash
 
-app = Flask(__name__) # create the application instance :)
-app.config.from_object(__name__) # load config from this file , flaskr.py
+app = Flask(__name__)  # create the application instance :)
+app.config.from_object(__name__)  # load config from this file , flaskr.py
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, '../data/data.sqlite'),
@@ -64,18 +64,30 @@ def show_entries():
     if source_id is None:
         source_id = 1
 
-    cur = db.execute("""select strftime('%H %M',time) as time, value
-                     from pm10 
-                     where strftime('%Y-%m-%d',time) =date(?, '-1 years') and source_id=? 
-                     order by time asc ;""", [date, source_id])
+    cur = db.execute("""SELECT type  FROM source WHERE id=?""",
+                     [source_id])
+    table_name = cur.fetchone()['type']
+
+    query = ("select strftime('%H %M',time) as time, value "
+             "from  " + table_name + " "
+             "where strftime('%Y-%m-%d',time) =date(?, '-1 years') and source_id=? "
+             "order by time asc;")
+    print(query)
+
+    cur = db.execute(query, [date, source_id])
     entries_prev = cur.fetchall()
 
-    cur = db.execute("""select strftime('%H %M',time) as time, value
-                     from pm10 
-                     where strftime('%Y-%m-%d',time) =date(?) and source_id=?
-                     order by time asc ;""", [date, source_id])
+    query = ("select strftime('%H %M',time) as time, value "
+             "from  " + table_name + " "
+             "where strftime('%Y-%m-%d',time) =date(?) and source_id=? "
+             "order by time asc;")
+
+    cur = db.execute(query, [date, source_id])
 
     entries = cur.fetchall()
+
+    if not entries_prev:
+        entries_prev = entries
 
     return render_template('graph.html', entries=entries, entries_prev=entries_prev)
 
@@ -107,8 +119,8 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, text) values (?, ?)',
-                 [request.form['title'], request.form['text']])
+    db.execute('INSERT INTO entries (title, text) VALUES (?, ?)',
+               [request.form['title'], request.form['text']])
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
