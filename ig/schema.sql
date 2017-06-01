@@ -33,7 +33,7 @@ create table temperature(
   value real,
   time TIMESTAMP
 );
-create UNIQUE INDEX temperature on temperature(time,source_id);
+create UNIQUE INDEX temperatureu on temperature(time,source_id);
 
 drop table IF EXISTS humidity;
 create table humidity(
@@ -42,7 +42,7 @@ create table humidity(
   value real,
   time TIMESTAMP
 );
-create UNIQUE INDEX humidity on humidity(time,source_id);
+create UNIQUE INDEX humidityu on humidity(time,source_id);
 
 /* croatian air quality data */
 insert into location (name) values ('zagreb-2');

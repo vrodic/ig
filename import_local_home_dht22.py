@@ -2,11 +2,12 @@
 # /home/pi/Adafruit_Python_DHT/examples/AdafruitDHT.py 22 22 |gawk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' >> accumulating_file
 
 import sqlite3
-
+import sys
 
 from dateutil.parser import parse
 from datetime import date, datetime, time
 from babel.dates import format_date, format_datetime, format_time
+from urllib.request import urlopen
 
 
 db = sqlite3.connect('data/data.sqlite')
@@ -17,7 +18,9 @@ queryHumidity = "REPLACE INTO humidity (source_id, value,time) VALUES(?, ?, ?)"
 source_temperature = "3"
 source_humidity = "4"
 
-for line in open('data/temp.log'):
+data = urlopen(sys.argv[1]).read().decode('utf-8')
+data = data.split("\n")
+for line in data:
     failed = line.find("Failed to get reading")
     if failed > 0:
         continue
