@@ -52,6 +52,23 @@ def close_db(error):
         g.sqlite_db.close()
 
 
+def query_values(table_name , source_id, date, sqlite_date_offset=None):
+    date_str = "date(?"
+    if sqlite_date_offset:
+        date_str += ", '" + sqlite_date_offset + "'"
+    date_str += ")"
+    query = ("select strftime('%H:%M',time) as time, value "
+             "from  " + table_name + " "
+             "where strftime('%Y-%m-%d',time) = " + date_str + " and source_id=? "
+             "order by time asc;")
+    db = get_db()
+    cur = db.execute(query, [date, source_id])
+
+    print(query)
+
+    return cur.fetchall()
+
+
 @app.route('/')
 def show_entries():
     db = get_db()
@@ -64,32 +81,27 @@ def show_entries():
     if source_id is None:
         source_id = 1
 
-    cur = db.execute("""SELECT type  FROM source WHERE id=?""",
+    cur = db.execute("""SELECT * FROM source WHERE id=?""",
                      [source_id])
-    table_name = cur.fetchone()['type']
+    source = cur.fetchone()
+    table_name = source['type']
 
-    query = ("select strftime('%H %M',time) as time, value "
+    query = ("select strftime('%H:%M',time) as time, value "
              "from  " + table_name + " "
-             "where strftime('%Y-%m-%d',time) =date(?, '-1 years') and source_id=? "
+             "where strftime('%Y-%m-%d',time) =date(?, '-1 days') and source_id=? "
              "order by time asc;")
     print(query)
 
-    cur = db.execute(query, [date, source_id])
-    entries_prev = cur.fetchall()
+    entries_prev = query_values(table_name, source_id, date, '-1 days')
 
-    query = ("select strftime('%H %M',time) as time, value "
-             "from  " + table_name + " "
-             "where strftime('%Y-%m-%d',time) =date(?) and source_id=? "
-             "order by time asc;")
-
-    cur = db.execute(query, [date, source_id])
-
-    entries = cur.fetchall()
+    entries = query_values(table_name, source_id, date)
 
     if not entries_prev:
         entries_prev = entries
 
-    return render_template('graph.html', entries=entries, entries_prev=entries_prev)
+    return render_template('graph.html', entries=entries,
+                           entries_prev=entries_prev,
+                           source=source)
 
 
 @app.route('/login', methods=['GET', 'POST'])

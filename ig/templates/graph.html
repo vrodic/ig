@@ -1,29 +1,48 @@
 {% extends "layout.html" %}
 {% block body %}
 
+    <style>
+        .ct-label {
+            fill: rgba(0,0,0,1);
+            color: rgba(0,0,0,1);
+            font-size: 1rem;
+            line-height: 1;
+        }
+    </style>
+    {{ source.type }}
+
     <div class="ct-chart ct-perfect-fourth"></div>
     <script>
         var data = {
-            labels: [],
-            series: [[]]
+            labels: [
+                {% for entry in entries_prev %}'{{ entry.time }}', {% endfor %}
+            ],
+            series: [
+                [{% for entry in entries_prev %}'{{ entry.value}}',{% endfor %},],
+                [{% for entry in entries %}'{{ entry.value}}',{% endfor %}]
+            ]
         };
 
-        {% for entry in entries_prev %}
-            data.labels.push('{{ entry.time }}')
-            data.series[0].push('{{ entry.value }}')
-        {% endfor %}
-
-        data.series.push([])
-        {% for entry in entries %}
-            data.series[1].push('{{ entry.value }}')
-        {% endfor %}
 
         new Chartist.Line('.ct-chart', data
         , {
             fullWidth: true,
             chartPadding: {
                 right: 40
-            }
+            },
+
+  axisX: {
+    labelInterpolationFnc: function skipLabels(value, index) {
+      return index % 10  === 0 ? value : null;
+    }
+  },
+
+    axisY: {
+    labelInterpolationFnc: function skipLabels(value, index) {
+      return index % 3  === 0 ? value : null;
+    }
+  }
+
         });
 
 
