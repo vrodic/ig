@@ -3,24 +3,35 @@
     <!--h1 class="page-header">Dashboard</h1-->
     <div class="row placeholders">
         <div class="col-xs-6 col-sm-3 placeholder">
-            <h4>{{ home.temperature }}</h4>
+            <h4><a href="/?source_id={{ home.temperature.source_id }}">{{ home.temperature.value }}</a></h4>
             <span class="text-muted">Temperature</span>
         </div>
         <div class="col-xs-6 col-sm-3 placeholder">
-            <h4>{{ home.humidity }}</h4>
+            <h4><a href="/?source_id={{ home.humidity.source_id }}">{{ home.humidity.value }}</a></h4>
 
             <span class="text-muted">Humidity</span>
-            <h6>{{ home.humidity_time }}</h6>
+            <h6>{{ home.humidity.time }}</h6>
         </div>
         <div class="col-xs-6 col-sm-3 placeholder">
-            <h4>{{ local.temperature }}</h4>
+            <h4><a href="/?source_id={{ local.temperature.source_id }}">{{ local.temperature.value }}</a></h4>
             <span class="text-muted">Outside temperature</span>
         </div>
         <div class="col-xs-6 col-sm-3 placeholder">
-            <h4>{{ local.humidity }}</h4>
+            <h4><a href="/?source_id={{ local.humidity.source_id }}">{{ local.humidity.value }}</a></h4>
             <span class="text-muted">Outside humidity</span>
-            <h6>{{ local.humidity_time }}</h6>
+            <h6>{{ local.humidity.time }}</h6>
         </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <h4><a href="/?source_id={{ local.air.source_id }}">{{ local.air.value }}</a></h4>
+            <span class="text-muted">Outside AQ PM10</span>
+            <h6>{{ local.air.time }}</h6>
+        </div>
+       <div class="col-xs-6 col-sm-3 placeholder">
+            <h4><a href="/?source_id={{ local.wind.source_id }}">{{ local.wind.value }}</a></h4>
+            <span class="text-muted">Outside wind speed</span>
+            <h6>{{ local.wind.time }}</h6>
+        </div>
+
     </div>
 
     <h2 class="sub-header">Section title</h2>

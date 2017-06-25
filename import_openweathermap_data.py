@@ -23,10 +23,12 @@ source_temperature = "5"
 source_humidity = "6"
 source_pressure = "7"
 source_windspeed = "8"
+print(time)
+print(weather['main']['temp'])
 c.execute(queryTemperature, [source_temperature, weather['main']['temp'], time])
 c.execute(queryHumidity, [source_humidity, weather['main']['humidity'], time])
 c.execute(queryPressure, [source_pressure, weather['main']['pressure'], time])
-c.execute(queryWindspeed, [source_pressure, weather['wind']['speed'], time])
+c.execute(queryWindspeed, [source_windspeed, weather['wind']['speed'], time])
 
 db.commit()
 db.close()

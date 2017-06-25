@@ -74,19 +74,32 @@ def query(query_string, params=[]):
     cur = db.execute(query_string, params)
     return cur.fetchall()
 
+def get_last_value(table, source_id):
+    q = "SELECT * FROM " + table + " WHERE source_id=? ORDER BY id DESC LIMIT 1"
+    return query(q, [source_id])
 
 @app.route('/dash')
 def show_dash():
     home = {}
-    data = query("SELECT * FROM temperature WHERE source_id=3 ORDER BY id DESC LIMIT 1")
-    home['temperature'] = data[0]['value']
-    home['temperature_time'] = data[0]['time']
+    data = get_last_value("temperature", 3)
+    home['temperature'] = data[0]
 
-    data = query("SELECT * FROM humidity WHERE source_id=4 ORDER BY id DESC LIMIT 1")
-    home['humidity'] = data[0]['value']
-    home['humidity_time'] = data[0]['time']
+    data = get_last_value("humidity", 4)
+    home['humidity'] = data[0]
 
     local = {}
+    data = get_last_value("temperature", 5)
+    local['temperature'] = data[0]
+
+    data = get_last_value("humidity", 6)
+    local['humidity'] = data[0]
+
+    data = get_last_value("pm10", 1)
+    local['air'] = data[0]
+
+    data = get_last_value("windspeed", 8)
+    local['wind'] = data[0]
+
 
     return render_template('dash.html', home=home,
                            local=local)
