@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import dateutil.parser
+
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash, jsonify
 
@@ -200,3 +202,11 @@ def add_entry():
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
+
+
+@app.template_filter('format_time')
+def _jinja2_filter_datetime(date, fmt=None):
+    date = dateutil.parser.parse(date)
+    native = date.replace(tzinfo=None)
+    format='%d %H:%M'
+    return native.strftime(format)
