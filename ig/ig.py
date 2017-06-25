@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-    render_template, flash
+    render_template, flash, jsonify
 
 app = Flask(__name__)  # create the application instance :)
 app.config.from_object(__name__)  # load config from this file , flaskr.py
@@ -52,21 +52,72 @@ def close_db(error):
         g.sqlite_db.close()
 
 
-def query_values(table_name , source_id, date, sqlite_date_offset=None):
+def query_values(table_name, source_id, date, sqlite_date_offset=None):
     date_str = "date(?"
     if sqlite_date_offset:
         date_str += ", '" + sqlite_date_offset + "'"
     date_str += ")"
     query = ("select strftime('%H:%M',time) as time, value "
              "from  " + table_name + " "
-             "where strftime('%Y-%m-%d',time) = " + date_str + " and source_id=? "
-             "order by time asc;")
+                                     "where strftime('%Y-%m-%d',time) = " + date_str + " and source_id=? "
+                                                                                       "order by time asc;")
     db = get_db()
     cur = db.execute(query, [date, source_id])
 
     print(query)
 
     return cur.fetchall()
+
+
+def query(query_string, params=[]):
+    db = get_db()
+    cur = db.execute(query_string, params)
+    return cur.fetchall()
+
+
+@app.route('/dash')
+def show_dash():
+    home = {}
+    data = query("SELECT * FROM temperature WHERE source_id=3 ORDER BY id DESC LIMIT 1")
+    home['temperature'] = data[0]['value']
+    home['temperature_time'] = data[0]['time']
+
+    data = query("SELECT * FROM humidity WHERE source_id=4 ORDER BY id DESC LIMIT 1")
+    home['humidity'] = data[0]['value']
+    home['humidity_time'] = data[0]['time']
+
+    local = {}
+
+    return render_template('dash.html', home=home,
+                           local=local)
+
+
+@app.route('/add_sensors_data', methods=['POST'])
+def add_sensors_data():
+    if not request.json:
+        abort(400)
+
+    items = []
+    db = get_db()
+
+    for item in request.json:
+        data = query("SELECT id FROM source WHERE source_type=? AND type=? AND location_id=?",
+                     [item['source_type'], item['type'], item['location_id']])
+        source_id = data[0]['id']
+
+        db.execute('INSERT INTO ' + item['type'] +
+                   ' (source_id, value, time) VALUES (?, ?, (select current_timestamp))',
+                   [source_id, item['value']])
+        db.commit()
+
+        items.append(item)
+
+    response = {
+        'message': 'ok',
+        'items': items
+    }
+
+    return jsonify({'response': response}), 201
 
 
 @app.route('/')
@@ -88,8 +139,8 @@ def show_entries():
 
     query = ("select strftime('%H:%M',time) as time, value "
              "from  " + table_name + " "
-             "where strftime('%Y-%m-%d',time) =date(?, '-1 days') and source_id=? "
-             "order by time asc;")
+                                     "where strftime('%Y-%m-%d',time) =date(?, '-1 days') and source_id=? "
+                                     "order by time asc;")
     print(query)
 
     entries_prev = query_values(table_name, source_id, date, '-1 days')

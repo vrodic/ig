@@ -38,8 +38,10 @@ for line in data:
     humidity = line[posHumid:posHumidEnd]
     print(humidity)
     #print(line.rstrip('\n'))
-    c.execute(queryTemperature, [source_temperature, temperature, timestamp])
-    c.execute(queryHumidity, [source_humidity, humidity, timestamp])
+    if temperature is not '':
+        c.execute(queryTemperature, [source_temperature, temperature, timestamp])
+    if humidity is not '':
+        c.execute(queryHumidity, [source_humidity, humidity, timestamp])
 
 db.commit()
 db.close()
