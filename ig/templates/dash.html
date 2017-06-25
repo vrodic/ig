@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block body %}
+    <!--h1 class="page-header">Dashboard</h1-->
+    <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <h4>{{ home.temperature }}</h4>
+            <span class="text-muted">Temperature</span>
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <h4>{{ home.humidity }}</h4>
+
+            <span class="text-muted">Humidity</span>
+            <h6>{{ home.humidity_time }}</h6>
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <h4>{{ local.temperature }}</h4>
+            <span class="text-muted">Outside temperature</span>
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+            <h4>{{ local.humidity }}</h4>
+            <span class="text-muted">Outside humidity</span>
+            <h6>{{ local.humidity_time }}</h6>
+        </div>
+    </div>
+
+    <h2 class="sub-header">Section title</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Header</th>
+                <th>Header</th>
+                <th>Header</th>
+                <th>Header</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1,001</td>
+                <td>Lorem</td>
+                <td>ipsum</td>
+                <td>dolor</td>
+                <td>sit</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

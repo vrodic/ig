@@ -63,4 +63,35 @@ insert into location (name) values ('my_apartment');
 insert into source (location_id, type, source_type) values ('3','temperature','local_dht22');
 insert into source (location_id, type, source_type) values ('3','humidity','local_dht22');
 
+insert into location (name, lat,long) values('zagreb-ow', '45.81', '15.98');
+insert into source  (location_id, type, source_type, url_template)
+values (4,'temperature', 'openweathermap', 'http://api.openweathermap.org/data/2.5/weather?q=Zagreb,hr&appid={{api_key}}&units=metric');
+
+insert into source  (location_id, type, source_type)
+values (4,'humidity', 'openweathermap');
+insert into source  (location_id, type, source_type)
+values (4,'pressure', 'openweathermap');
+
+insert into source  (location_id, type, source_type)
+values (4,'windspeed', 'openweathermap');
+
+create table pressure(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_id integer,
+  value real,
+  time TIMESTAMP
+);
+create UNIQUE INDEX pressureu on pressure(time,source_id);
+
+create table windspeed(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_id integer,
+  value real,
+  time TIMESTAMP
+);
+create UNIQUE INDEX windspeedu on windspeed(time,source_id);
+
+
+
+
 
