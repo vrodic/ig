@@ -1,5 +1,5 @@
 import os
-import sqlite3
+import pymysql.cursors
 import dateutil.parser
 
 from flask import Flask, request, session, g, redirect, url_for, abort, \
@@ -18,10 +18,14 @@ app.config.from_envvar('IG_SETTINGS', silent=True)
 
 
 def connect_db():
-    """Connects to the specific database."""
-    rv = sqlite3.connect(app.config['DATABASE'])
-    rv.row_factory = sqlite3.Row
-    return rv
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 password='root',
+                                 db='wlog',
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor)
+
+    return connection
 
 
 def init_db():
@@ -54,31 +58,31 @@ def close_db(error):
         g.sqlite_db.close()
 
 
-def query_values(table_name, source_id, date, sqlite_date_offset=None):
-    date_str = "date(?"
-    if sqlite_date_offset:
-        date_str += ", '" + sqlite_date_offset + "'"
+def query_values(table_name, source_id, date, sqlite_date_offset="0 day"):
+    date_str = "date_sub(" + date
+    date_str += ", interval " + sqlite_date_offset
     date_str += ")"
-    query = ("select strftime('%H:%M',time) as time, value "
+    query = ("select time(time) as time, value "
              "from  " + table_name + " "
-                                     "where strftime('%Y-%m-%d',time) = " + date_str + " and source_id=? "
-                                                                                       "order by time asc;")
-    db = get_db()
-    cur = db.execute(query, [date, source_id])
+             "where date(time) = " + date_str + " and source_id=" + str(source_id) +
+             " order by time asc;")
+    print(query)
+    db = get_db().cursor()
+    db.execute(query)
 
     print(query)
 
-    return cur.fetchall()
+    return db.fetchall()
 
 
-def query(query_string, params=[]):
-    db = get_db()
-    cur = db.execute(query_string, params)
-    return cur.fetchall()
+def query(query_string):
+    db = get_db().cursor()
+    db.execute(query_string)
+    return db.fetchall()
 
 def get_last_value(table, source_id):
-    q = "SELECT * FROM " + table + " WHERE source_id=? ORDER BY id DESC LIMIT 1"
-    return query(q, [source_id])
+    q = "SELECT * FROM " + table + " WHERE source_id=" + str(source_id) + " ORDER BY id DESC LIMIT 1"
+    return query(q)
 
 @app.route('/dash')
 def show_dash():
@@ -114,15 +118,14 @@ def add_sensors_data():
 
     items = []
     db = get_db()
+    cursor = db.cursor()
 
     for item in request.json:
-        data = query("SELECT id FROM source WHERE source_type=? AND type=? AND location_id=?",
-                     [item['source_type'], item['type'], item['location_id']])
+        data = query("SELECT id FROM source WHERE source_type='" + item['source_type'] +"' AND type='"+ item['type']+"' AND location_id=" +str(item['location_id']))
         source_id = data[0]['id']
 
-        db.execute('INSERT INTO ' + item['type'] +
-                   ' (source_id, value, time) VALUES (?, ?, (select current_timestamp))',
-                   [source_id, item['value']])
+        cursor.execute('INSERT INTO ' + item['type'] +
+                   ' (source_id, value, time) VALUES ( ' + str(source_id) + ',' + str(item['value']) +', (select now()))')
         db.commit()
 
         items.append(item)
@@ -137,28 +140,22 @@ def add_sensors_data():
 
 @app.route('/')
 def show_entries():
-    db = get_db()
+    db = get_db().cursor()
 
     date = request.args.get('date')
     if date is None:
-        date = 'now'
+        date = 'now()'
 
     source_id = request.args.get('source_id')
     if source_id is None:
         source_id = 1
 
-    cur = db.execute("""SELECT * FROM source WHERE id=?""",
-                     [source_id])
-    source = cur.fetchone()
+    db.execute('SELECT * FROM source WHERE id=%d'% int(source_id))
+    source = db.fetchone()
     table_name = source['type']
 
-    query = ("select strftime('%H:%M',time) as time, value "
-             "from  " + table_name + " "
-                                     "where strftime('%Y-%m-%d',time) =date(?, '-1 days') and source_id=? "
-                                     "order by time asc;")
-    print(query)
 
-    entries_prev = query_values(table_name, source_id, date, '-1 days')
+    entries_prev = query_values(table_name, source_id, date, '1 day')
 
     entries = query_values(table_name, source_id, date)
 
@@ -206,7 +203,6 @@ def add_entry():
 
 @app.template_filter('format_time')
 def _jinja2_filter_datetime(date, fmt=None):
-    date = dateutil.parser.parse(date)
     native = date.replace(tzinfo=None)
     format='%d %H:%M'
     return native.strftime(format)

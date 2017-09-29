@@ -1,4 +1,4 @@
 babel
 python-dateutil
 flask
-PyMySQL
+PyMySql

@@ -1,0 +1,2 @@
+#!/bin/bash
+/home/pi/Adafruit_Python_DHT/examples/AdafruitDHT_submit_json_local.py 22 22 |gawk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' >> /home/pi/fuse/pi/home/pi/fuse/vrodic@mjesec/home/vrodic/public_html/Quee7Y/3/temp.log
