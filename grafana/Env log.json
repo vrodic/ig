@@ -48,7 +48,7 @@
   "rows": [
     {
       "collapse": false,
-      "height": 195,
+      "height": -887,
       "panels": [
         {
           "cacheTimeout": null,
@@ -60,83 +60,7 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_LOCALWTEMP}",
-          "format": "d",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 8,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "time",
-          "targets": [
-            {
-              "alias": "",
-              "format": "table",
-              "hide": false,
-              "rawSql": "SELECT time FROM temperature WHERE source_id=3 and $__timeFilter(time ) order by id DESC LIMIT 1",
-              "refId": "A"
-            }
-          ],
-          "thresholds": "",
-          "title": "Time temp read",
-          "type": "singlestat",
-          "valueFontSize": "50%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "avg"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "${DS_LOCALWTEMP}",
-          "format": "none",
+          "format": "celsius",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -212,82 +136,7 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_LOCALWTEMP}",
-          "format": "none",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 7,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 3,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "tableColumn": "value",
-          "targets": [
-            {
-              "alias": "",
-              "format": "table",
-              "rawSql": "SELECT value FROM temperature WHERE source_id=5 and $__timeFilter(time ) order by id DESC LIMIT 1\n",
-              "refId": "A"
-            }
-          ],
-          "thresholds": "",
-          "title": "Temp ZG",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "avg"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "${DS_LOCALWTEMP}",
-          "format": "none",
+          "format": "humidity",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -323,7 +172,7 @@
               "to": "null"
             }
           ],
-          "span": 3,
+          "span": 1,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -363,7 +212,82 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_LOCALWTEMP}",
-          "format": "none",
+          "format": "celsius",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 7,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 1,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "value",
+          "targets": [
+            {
+              "alias": "",
+              "format": "table",
+              "rawSql": "SELECT value FROM temperature WHERE source_id=5 and $__timeFilter(time ) order by id DESC LIMIT 1\n",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "Temp ZG",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "${DS_LOCALWTEMP}",
+          "format": "humidity",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -399,7 +323,7 @@
               "to": "null"
             }
           ],
-          "span": 3,
+          "span": 1,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -420,6 +344,158 @@
           "title": "Humidity ZG",
           "type": "singlestat",
           "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "${DS_LOCALWTEMP}",
+          "format": "d",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 8,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "time",
+          "targets": [
+            {
+              "alias": "",
+              "format": "table",
+              "hide": false,
+              "rawSql": "SELECT time FROM temperature WHERE source_id=3 and $__timeFilter(time ) order by id DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "Stan reported",
+          "type": "singlestat",
+          "valueFontSize": "50%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "${DS_LOCALWTEMP}",
+          "format": "d",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 12,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 6,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "time",
+          "targets": [
+            {
+              "alias": "",
+              "format": "table",
+              "hide": false,
+              "rawSql": "SELECT time FROM temperature WHERE source_id=5 and $__timeFilter(time ) order by id DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "ZG OWM reported",
+          "type": "singlestat",
+          "valueFontSize": "50%",
           "valueMaps": [
             {
               "op": "=",
@@ -506,7 +582,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "ppm",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -588,7 +664,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "celsius",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -652,7 +728,7 @@
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'humidity-stan' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom windspeed\nwhere source_id='8' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'wind-zg' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom windspeed\nwhere source_id='8' and $__timeFilter(time)\norder by time asc ",
               "refId": "A"
             }
           ],
@@ -675,7 +751,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "velocitykmh",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -757,7 +833,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "humidity",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -820,5 +896,5 @@
   },
   "timezone": "",
   "title": "Env log",
-  "version": 11
+  "version": 21
 }
