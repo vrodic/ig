@@ -48,7 +48,7 @@
   "rows": [
     {
       "collapse": false,
-      "height": -887,
+      "height": -1118,
       "panels": [
         {
           "cacheTimeout": null,
@@ -363,6 +363,82 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_LOCALWTEMP}",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 14,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 1,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "value",
+          "targets": [
+            {
+              "alias": "",
+              "format": "table",
+              "hide": false,
+              "rawSql": "SELECT value \nFROM \npm10 \nWHERE source_id=1 and $__timeFilter(time ) order by id DESC LIMIT 1\n",
+              "refId": "A"
+            }
+          ],
+          "thresholds": "",
+          "title": "PM10 dub µg/m3",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "${DS_LOCALWTEMP}",
           "format": "d",
           "gauge": {
             "maxValue": 100,
@@ -475,7 +551,7 @@
               "to": "null"
             }
           ],
-          "span": 6,
+          "span": 5,
           "sparkline": {
             "fillColor": "rgba(31, 118, 189, 0.18)",
             "full": false,
@@ -515,9 +591,43 @@
     },
     {
       "collapse": false,
-      "height": 301,
+      "height": 308,
       "panels": [
         {
+          "alert": {
+            "conditions": [
+              {
+                "evaluator": {
+                  "params": [
+                    35
+                  ],
+                  "type": "gt"
+                },
+                "operator": {
+                  "type": "and"
+                },
+                "query": {
+                  "params": [
+                    "A",
+                    "1h",
+                    "now"
+                  ]
+                },
+                "reducer": {
+                  "params": [],
+                  "type": "avg"
+                },
+                "type": "query"
+              }
+            ],
+            "executionErrorState": "alerting",
+            "frequency": "300s",
+            "handler": 1,
+            "message": "PM10 is bad for ZG-dub",
+            "name": "PM10 alert",
+            "noDataState": "no_data",
+            "notifications": []
+          },
           "aliasColors": {},
           "bars": false,
           "dashLength": 10,
@@ -526,6 +636,7 @@
           "fill": 1,
           "id": 1,
           "legend": {
+            "alignAsTable": true,
             "avg": true,
             "current": true,
             "max": true,
@@ -542,7 +653,13 @@
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {},
+            {
+              "alias": "wind-zg",
+              "yaxis": 2
+            }
+          ],
           "spaceLength": 10,
           "span": 6,
           "stack": false,
@@ -559,16 +676,30 @@
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'ZG-vukovarska' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom pm10\nwhere source_id='2' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'ZG-vuk' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom pm10\nwhere source_id='2' and $__timeFilter(time)\norder by time asc ",
               "refId": "B"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "rawSql": "select value, 'wind-zg' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom windspeed\nwhere source_id='8' and $__timeFilter(time)\norder by time asc ",
+              "refId": "C"
             }
           ],
-          "thresholds": [],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": "gt",
+              "value": 35
+            }
+          ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "PM10",
+          "title": "PM10 µg/m3",
           "tooltip": {
-            "shared": true,
+            "shared": false,
             "sort": 0,
             "value_type": "individual"
           },
@@ -578,7 +709,9 @@
             "mode": "time",
             "name": null,
             "show": true,
-            "values": []
+            "values": [
+              "total"
+            ]
           },
           "yaxes": [
             {
@@ -590,8 +723,8 @@
               "show": true
             },
             {
-              "format": "short",
-              "label": null,
+              "format": "velocitykmh",
+              "label": "",
               "logBase": 1,
               "max": null,
               "min": null,
@@ -605,9 +738,11 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_LOCALWTEMP}",
+          "decimals": 2,
           "fill": 1,
           "id": 3,
           "legend": {
+            "alignAsTable": true,
             "avg": true,
             "current": true,
             "max": true,
@@ -643,6 +778,13 @@
               "hide": false,
               "rawSql": "select value, 'temp-zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='5' and $__timeFilter(time)\norder by time asc ",
               "refId": "B"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "select value, 'temp-ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='9' and $__timeFilter(time)\norder by time asc \n",
+              "refId": "C"
             }
           ],
           "thresholds": [],
@@ -691,7 +833,7 @@
     },
     {
       "collapse": false,
-      "height": 278,
+      "height": 400,
       "panels": [
         {
           "aliasColors": {},
@@ -700,8 +842,9 @@
           "dashes": false,
           "datasource": "${DS_LOCALWTEMP}",
           "fill": 1,
-          "id": 5,
+          "id": 13,
           "legend": {
+            "alignAsTable": true,
             "avg": true,
             "current": true,
             "max": true,
@@ -718,7 +861,13 @@
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {},
+            {
+              "alias": "wind-zg",
+              "yaxis": 2
+            }
+          ],
           "spaceLength": 10,
           "span": 6,
           "stack": false,
@@ -728,16 +877,29 @@
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'wind-zg' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom windspeed\nwhere source_id='8' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'ZG-dub' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom pm10\nwhere source_id='1' and $__timeFilter(time)\norder by time asc ",
               "refId": "A"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "select value, 'ZG-vukovarska' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom pm10\nwhere source_id='2' and $__timeFilter(time)\norder by time asc ",
+              "refId": "B"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "rawSql": "select value, 'wind-zg' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom windspeed\nwhere source_id='8' and $__timeFilter(time)\norder by time asc ",
+              "refId": "C"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
-          "timeShift": null,
-          "title": "Wind speed",
+          "timeShift": "1y",
+          "title": "PM10",
           "tooltip": {
-            "shared": true,
+            "shared": false,
             "sort": 0,
             "value_type": "individual"
           },
@@ -747,11 +909,13 @@
             "mode": "time",
             "name": null,
             "show": true,
-            "values": []
+            "values": [
+              "total"
+            ]
           },
           "yaxes": [
             {
-              "format": "velocitykmh",
+              "format": "ppm",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -759,8 +923,8 @@
               "show": true
             },
             {
-              "format": "short",
-              "label": null,
+              "format": "velocitykmh",
+              "label": "",
               "logBase": 1,
               "max": null,
               "min": null,
@@ -777,6 +941,7 @@
           "fill": 1,
           "id": 4,
           "legend": {
+            "alignAsTable": true,
             "avg": true,
             "current": true,
             "max": true,
@@ -812,6 +977,13 @@
               "hide": false,
               "rawSql": "select value, 'humidity-zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='6' and $__timeFilter(time)\norder by time asc ",
               "refId": "B"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "select value, 'humidity-ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='10' and $__timeFilter(time)\norder by time asc ",
+              "refId": "C"
             }
           ],
           "thresholds": [],
@@ -866,7 +1038,7 @@
     "list": []
   },
   "time": {
-    "from": "now/d",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {
@@ -896,5 +1068,5 @@
   },
   "timezone": "",
   "title": "Env log",
-  "version": 21
+  "version": 35
 }
