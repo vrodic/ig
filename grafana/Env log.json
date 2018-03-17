@@ -60,6 +60,7 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "datasource": "${DS_LOCALWTEMP}",
+          "decimals": 1,
           "format": "celsius",
           "gauge": {
             "maxValue": 100,
@@ -591,7 +592,7 @@
     },
     {
       "collapse": false,
-      "height": 308,
+      "height": 312,
       "panels": [
         {
           "alert": {
@@ -738,7 +739,7 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_LOCALWTEMP}",
-          "decimals": 2,
+          "decimals": 1,
           "fill": 1,
           "id": 3,
           "legend": {
@@ -769,21 +770,21 @@
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'temp-stan' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='3' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'stan' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='3' and $__timeFilter(time)\norder by time asc ",
               "refId": "A"
             },
             {
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'temp-zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='5' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='5' and $__timeFilter(time)\norder by time asc ",
               "refId": "B"
             },
             {
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'temp-ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='9' and $__timeFilter(time)\norder by time asc \n",
+              "rawSql": "select value, 'ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='9' and $__timeFilter(time)\norder by time asc \n",
               "refId": "C"
             }
           ],
@@ -833,7 +834,7 @@
     },
     {
       "collapse": false,
-      "height": 400,
+      "height": 403,
       "panels": [
         {
           "aliasColors": {},
@@ -842,7 +843,97 @@
           "dashes": false,
           "datasource": "${DS_LOCALWTEMP}",
           "fill": 1,
-          "id": 13,
+          "id": 4,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 3,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "alias": "",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "select value, 'stan' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='4' and $__timeFilter(time)\norder by time asc ",
+              "refId": "A"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "select value, 'zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='6' and $__timeFilter(time)\norder by time asc ",
+              "refId": "B"
+            },
+            {
+              "alias": "",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "select value, 'ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='10' and $__timeFilter(time)\norder by time asc ",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "humidity",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "humidity",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_LOCALWTEMP}",
+          "fill": 1,
+          "id": 15,
           "legend": {
             "alignAsTable": true,
             "avg": true,
@@ -869,7 +960,7 @@
             }
           ],
           "spaceLength": 10,
-          "span": 6,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -884,7 +975,7 @@
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'ZG-vukovarska' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom pm10\nwhere source_id='2' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'ZG-vuk' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom pm10\nwhere source_id='2' and $__timeFilter(time)\norder by time asc ",
               "refId": "B"
             },
             {
@@ -894,10 +985,18 @@
               "refId": "C"
             }
           ],
-          "thresholds": [],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": "gt",
+              "value": 35
+            }
+          ],
           "timeFrom": null,
           "timeShift": "1y",
-          "title": "PM10",
+          "title": "PM10 µg/m3",
           "tooltip": {
             "shared": false,
             "sort": 0,
@@ -938,8 +1037,9 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "${DS_LOCALWTEMP}",
+          "decimals": 1,
           "fill": 1,
-          "id": 4,
+          "id": 16,
           "legend": {
             "alignAsTable": true,
             "avg": true,
@@ -955,8 +1055,8 @@
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 5,
-          "points": false,
+          "pointradius": 1,
+          "points": true,
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
@@ -968,28 +1068,28 @@
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'humidity-stan' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='4' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'stan' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='3' and $__timeFilter(time)\norder by time asc ",
               "refId": "A"
             },
             {
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'humidity-zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='6' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'zgb' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='5' and $__timeFilter(time)\norder by time asc ",
               "refId": "B"
             },
             {
               "alias": "",
               "format": "time_series",
               "hide": false,
-              "rawSql": "select value, 'humidity-ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom humidity\nwhere source_id='10' and $__timeFilter(time)\norder by time asc ",
+              "rawSql": "select value, 'ured' as metric, \nUNIX_TIMESTAMP(time) as time_sec \nfrom temperature\nwhere source_id='9' and $__timeFilter(time)\norder by time asc \n",
               "refId": "C"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
-          "timeShift": null,
-          "title": "humidity",
+          "timeShift": "1y",
+          "title": "temperatura",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -1005,7 +1105,7 @@
           },
           "yaxes": [
             {
-              "format": "humidity",
+              "format": "celsius",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -1068,5 +1168,5 @@
   },
   "timezone": "",
   "title": "Env log",
-  "version": 35
+  "version": 41
 }
