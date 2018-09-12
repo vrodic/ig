@@ -1,34 +1,41 @@
 import json
-import sqlite3
-
+import pymysql.cursors
 
 from dateutil.parser import parse
 from datetime import date, datetime, time
 from babel.dates import format_date, format_datetime, format_time
 from urllib.request import urlopen
+import pytz
+
+utc=pytz.UTC
 
 
-db = sqlite3.connect('data/data.sqlite')
+db = pymysql.connect(host='localhost',
+                             user='root',
+                             password='root',
+                             db='wlog',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
 
 c = db.cursor()
 
 
 def import_source(source):
-    source_id = str(source[0])
-    type = source[2]
-    url_template = source[5]
+    source_id = str(source['id'])
+    type = source['type']
+    url_template = source['url_template']
 
     c = db.cursor()
     tablename = type
 
-    last_time = \
-        c.execute("SELECT time FROM " + tablename + " WHERE source_id=? ORDER BY time DESC LIMIT 1", [source_id])\
-        .fetchone()
+
+    c.execute("SELECT time FROM " + tablename + " WHERE source_id= " + source_id + " ORDER BY time DESC LIMIT 1")
+    last_time = c.fetchone()
 
     if last_time is None:
         start_date_hr = '01.01.2000.'
     else:
-        start_date_hr = format_date(parse(last_time[0]), format='short', locale='hr_HR')
+        start_date_hr = format_date(last_time['time'], format='short', locale='hr_HR')
 
     print(start_date_hr)
 
@@ -37,21 +44,29 @@ def import_source(source):
     url = url.replace('{{enddate_hr}}', end_date_hr)
     print(url)
 
-    query = "REPLACE INTO " + tablename + " (source_id, value,time) VALUES(?, ?, ?)"
-    print(query)
     aq = json.loads(urlopen(url).read().decode('utf-8'))
-
+    
     for item in aq:
-        val = item['Podatak']
-        time = val['vrijeme']
-        value = val['vrijednost']
+#        val = item['Podatak']
+        time = int(item['vrijeme']/1000)
+        value = item['vrijednost']
+        
+        print (last_time['time'].replace(tzinfo=utc));
+        item_time = datetime.fromtimestamp(time)
+#        print (item_time.isoformat())
+#        print (item_time.replace(tzinfo=utc));
+        if item_time.replace(tzinfo=utc) <= last_time['time'].replace(tzinfo=utc):
+            continue
+            
         print(item)
-        c.execute(query, [source_id, value, time])
+        query = "REPLACE INTO " + tablename + " (source_id, value,time) VALUES(" + source_id + ", " + str(value) + ",'" + item_time.isoformat() + "')"
+        c.execute(query)
 
     db.commit()
 
 
-for source in c.execute("SELECT * FROM source WHERE source_type='croatian_air_quality'"):
+c.execute("SELECT * FROM source WHERE source_type='croatian_air_quality'")
+for source in c.fetchall():
     print(source)
     import_source(source)
 
