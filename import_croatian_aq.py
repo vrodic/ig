@@ -47,19 +47,19 @@ def import_source(source):
     aq = json.loads(urlopen(url).read().decode('utf-8'))
     
     for item in aq:
-        val = item['Podatak']
-        time = val['vrijeme']
-        value = val['vrijednost']
+#        val = item['Podatak']
+        time = int(item['vrijeme']/1000)
+        value = item['vrijednost']
         
         print (last_time['time'].replace(tzinfo=utc));
-        item_time = parse(time)
-        print (item_time.replace(tzinfo=utc));
-        item_time = parse(time)
+        item_time = datetime.fromtimestamp(time)
+#        print (item_time.isoformat())
+#        print (item_time.replace(tzinfo=utc));
         if item_time.replace(tzinfo=utc) <= last_time['time'].replace(tzinfo=utc):
             continue
             
         print(item)
-        query = "REPLACE INTO " + tablename + " (source_id, value,time) VALUES(" + source_id + ", " + str(value) + ",'" + time + "')"
+        query = "REPLACE INTO " + tablename + " (source_id, value,time) VALUES(" + source_id + ", " + str(value) + ",'" + item_time.isoformat() + "')"
         c.execute(query)
 
     db.commit()
