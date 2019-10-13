@@ -2,18 +2,13 @@
 
 import bme680
 import time
+import datetime
+import RPi.GPIO as GPIO
 
 import json
+import os
 import urllib3.request
 
-print("""temperature-pressure-humidity.py - Displays temperature, pressure, and humidity.
-
-If you don't need gas readings, then you can read temperature,
-pressure and humidity quickly.
-
-Press Ctrl+C to exit
-
-""")
 
 try:
     sensor = bme680.BME680(bme680.I2C_ADDR_PRIMARY)
@@ -29,10 +24,13 @@ sensor.set_pressure_oversample(bme680.OS_4X)
 sensor.set_temperature_oversample(bme680.OS_8X)
 sensor.set_filter(bme680.FILTER_SIZE_3)
 
+os.system('sudo sh -c "sudo echo 0 >/sys/class/leds/led0/brightness"')
+time.sleep(2)
+
 http = urllib3.PoolManager()
 
 read = False
-print('Polling:')
+
 try:
     while not read:        
         if sensor.get_sensor_data():
@@ -40,8 +38,11 @@ try:
                 sensor.data.temperature,
                 sensor.data.pressure,
                 sensor.data.humidity)            
-            print(output)
+            print(datetime.datetime.now().isoformat(), output)
             #time.sleep(5)
+
+            os.system('sudo sh -c "sudo echo 1 >/sys/class/leds/led0/brightness"')
+
             data = [
                 {
                     "location_id": 7,
@@ -67,9 +68,14 @@ try:
             jsondata = json.dumps(data).encode('utf-8')
             req = http.request('POST','http://192.168.0.10:5000/add_sensors_data',
             body=jsondata,headers={'Content-Type': 'application/json'})
+            
+            
             read = True
+            
         else:
             print "no data"            
 
 except KeyboardInterrupt:
     pass
+
+
