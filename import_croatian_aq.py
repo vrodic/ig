@@ -5,6 +5,7 @@ from dateutil.parser import parse
 from datetime import date, datetime, time
 from babel.dates import format_date, format_datetime, format_time
 from urllib.request import urlopen
+import requests
 import pytz
 
 utc=pytz.UTC
@@ -44,7 +45,7 @@ def import_source(source):
     url = url.replace('{{enddate_hr}}', end_date_hr)
     print(url)
 
-    aq = json.loads(urlopen(url).read().decode('utf-8'))
+    aq = json.loads(requests.get(url).text)
     
     for item in aq:
 #        val = item['Podatak']
