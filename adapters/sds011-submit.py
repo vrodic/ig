@@ -1,4 +1,4 @@
-# pip3 install py-sds011 
+# pip install py-sds011 
 import datetime
 import json
 import urllib.request
@@ -8,6 +8,7 @@ import time
 
 sensor = sds011.SDS011("/dev/ttyUSB0", use_query_mode=True)
 sensor.sleep(sleep=False)
+time.sleep(5)
 pm25, pm10 = sensor.query()
 print(pm25, pm10)
 
@@ -32,3 +33,5 @@ req.add_header('Content-Type', 'application/json')
 jsondata = json.dumps(data)
 jsondataasbytes = jsondata.encode('utf-8')
 response = urllib.request.urlopen(req, jsondataasbytes)
+
+sensor.sleep()
