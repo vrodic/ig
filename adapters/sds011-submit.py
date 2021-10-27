@@ -5,26 +5,35 @@ import urllib.request
 
 import sds011
 import time
+from gpiozero import CPUTemperature
 
+cpu = CPUTemperature()
 sensor = sds011.SDS011("/dev/ttyUSB0", use_query_mode=True)
-sensor.sleep(sleep=False)
-time.sleep(5)
+#sensor.sleep(sleep=False)
+#time.sleep(5)
 pm25, pm10 = sensor.query()
 print(pm25, pm10)
 
 data = [
         {   
-            "location_id": 3,
+            "location_id": 6,
             "type": "pm25",
             "source_type": "localsds011",
             "value": round(pm25, 2)
         },
         {   
-            "location_id": 3,
+            "location_id": 6,
             "type": "pm10",
             "source_type": "localsds011",
             "value": round(pm10, 2)
         },
+        {   
+            "location_id": 6,
+            "type": "temperature",
+            "source_type": "rpicpu",
+            "value": round(cpu.temperature, 2)
+        },
+
 
 ]
 
@@ -34,4 +43,4 @@ jsondata = json.dumps(data)
 jsondataasbytes = jsondata.encode('utf-8')
 response = urllib.request.urlopen(req, jsondataasbytes)
 
-sensor.sleep()
+#sensor.sleep()
