@@ -124,8 +124,13 @@ def add_sensors_data():
         data = query("SELECT id FROM source WHERE source_type='" + item['source_type'] +"' AND type='"+ item['type']+"' AND location_id=" +str(item['location_id']))
         source_id = data[0]['id']
 
-        cursor.execute('INSERT INTO ' + item['type'] +
-                   ' (source_id, value, time) VALUES ( ' + str(source_id) + ',' + str(item['value']) +', (select now()))')
+        if 'logged_at' in item:
+            time = "'"+item['logged_at']+"'"
+        else:
+            time = 'select now()'
+
+        cursor.execute('INSERT IGNORE INTO ' + item['type'] +
+                   ' (source_id, value, time) VALUES ( ' + str(source_id) + ',' + str(item['value']) +', ('+time+') )')
         db.commit()
 
         items.append(item)
