@@ -35,8 +35,7 @@ json_r = json.loads(response.read().decode(response.info().get_param('charset') 
 post_items = []
 for item in json_r:
     if item['entity_id'] in sensors:
-        
-        utc = parser.parse(item['last_changed'])
+        utc = parser.parse(item['last_updated'])
 
         # Tell the datetime object that it's in UTC time zone since 
         # datetime objects are 'naive' by default
@@ -51,6 +50,7 @@ for item in json_r:
             "logged_at": local.isoformat(),
             'value': item['state']
         })
+        #print (local.isoformat(), item['state'])
 
 req = urllib.request.Request('http://vedranrodic.com:5000/add_sensors_data')
 req.add_header('Content-Type', 'application/json')
