@@ -47,7 +47,7 @@ for item in json_r:
             "location_id": sensors[item['entity_id']]['location_id'],
             "source_type": sensors[item['entity_id']]['source_type'],
             "type": sensors[item['entity_id']]['type'],
-            "logged_at": local.isoformat(),
+#            "logged_at": local.isoformat(),
             'value': item['state']
         })
         #print (local.isoformat(), item['state'])
